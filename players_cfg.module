@@ -6,29 +6,42 @@ use \Drupal\Core\Form\FormStateInterface;
  * Implements hook_form_FORM_ID_alter().
  */
 function players_cfg_form_user_login_form_alter(&$form, FormStateInterface $form_state, $form_id) {
-//  $form['name']['#title'] = t('Email address');
-//  $form['name']['#description'] = t('Enter your email address.');
-//  $form['pass']['#description'] = t('Enter your Player\'s Inc password.');
+  $form['name']['#title'] = t('Email address');
+  $form['name']['#description'] = t('Enter your email address.');
+  $form['pass']['#description'] = t('Enter your Player\'s Inc password.');
 }
 
 /**
- * Implements hook_form_FORM_ID_alter().
+ * Implements hook_toolbar_alter().
+ *
+ * Remove the Manage link from the toolbar for authenticated users.
  */
-function players_cfg_form_user_pass_alter(&$form, FormStateInterface $form_state, $form_id) {
-//  $form['name']['#title'] = t('Email address');
-}
+function players_cfg_toolbar_alter(&$items) {
 
-/**
- * Implements hook_form_FORM_ID_alter().
- */
-function players_cfg_form_user_register_form_alter(&$form, FormStateInterface $form_state, $form_id) {
-//  $form['account']['name']['#required'] = FALSE;
-//  $form['#validate'] = [];
-}
+  // Get the current user.
+  $current_user = \Drupal::currentUser();
 
-/**
- * Implements hook_entity_presave().
- */
-function players_cfg_entity_presave(Drupal\Core\Entity\EntityInterface $entity) {
-  
+  // Ensure that the current user is not user1.
+  if ($current_user->id() !== 1) {
+
+    // Get the roles of the user.
+    $roles = $current_user->getRoles();
+
+    // If there is only 1 role and that first role is authenticated, remove the manage link.
+    // If there are multiple roles then we know that they will have the Manage link, we are
+    // only removing the manage link for strictly authenticated users only.
+    if (
+      count($roles) > 0 &&
+      !in_array('administrator', $roles) &&
+      (
+        $roles[0] == 'authenticated' ||
+        in_array('floor', $roles)
+      )
+    ) {
+
+      // Remove the manage link.
+      unset($items['administration']);
+      unset($items['shortcuts']);
+    }
+  }
 }
