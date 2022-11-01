@@ -3,6 +3,21 @@
 use \Drupal\Core\Form\FormStateInterface;
 
 /**
+ * Implements hook_theme().
+ */
+function players_cfg_theme($existing, $type, $theme, $path) {
+
+  return [
+    'cbl_copy_text' => [
+      'variables' => [
+        'copy_text' => NULL,
+      ],
+    ],
+  ];
+}
+
+
+/**
  * Implements hook_form_FORM_ID_alter().
  */
 function players_cfg_form_user_login_form_alter(&$form, FormStateInterface $form_state, $form_id) {
@@ -43,5 +58,74 @@ function players_cfg_toolbar_alter(&$items) {
       unset($items['administration']);
       unset($items['shortcuts']);
     }
-  }
+}
+}
+
+/**
+ * Function to get list of colours.
+ *
+ * @return string
+ *   String of colours.
+ */
+function _players_cfg_colours(): string {
+
+  // Magenta, Pink, Purple, Lime green, White,
+  // Silver, Yellow.
+  $colours = '';
+
+  // White.
+  $colours .= '#FFFFFF,';
+
+  // Black.
+  $colours .= '#000000,';
+
+  // Aquamarine.
+  $colours .= '#7FFFD4,';
+
+  // Cyan.
+  $colours .= '#00FFFF,';
+
+  // Dark blue.
+  $colours .= '#00008B,';
+
+  // Gray.
+  $colours .= '#808080,';
+
+  // Green.
+  $colours .= '#008000,';
+
+  // Light blue.
+  $colours .= '#ADD8E6,';
+
+  // Lime green.
+  $colours .= '#00ff00,';
+
+  // Magenta.
+  $colours .= '#FF00FF,';
+
+  // Maroon.
+  $colours .= '#800000,';
+
+  // Olive.
+  $colours .= '#808000,';
+
+  // Orange.
+  $colours .= '#FFA500,';
+
+  // Pink.
+  $colours .= '#FFC0CB,';
+
+  // Purple.
+  $colours .= '#800080,';
+
+  // Red.
+  $colours .= '#ff0000,';
+
+  // Silver.
+  $colours .= '#C0C0C0,';
+
+  // Yellow.
+  $colours .= '#FFFF00';
+
+  return $colours;
 }
