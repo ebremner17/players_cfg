@@ -1,6 +1,7 @@
 <?php
 
 use \Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Url;
 
 /**
  * Implements hook_theme().
@@ -18,12 +19,42 @@ function players_cfg_theme($existing, $type, $theme, $path) {
 
 
 /**
+ * Implements hook_form_alter().
+ */
+function players_cfg_form_alter(&$form, FormStateInterface $form_state, $form_id) {
+  if ($form_id == 'node_pi_ct_games_form') {
+    $form['title']['#disabled'] = TRUE;
+    $form['title']['#required'] = FALSE;
+    $form['title']['widget']['#required'] = FALSE;
+    $form['title']['widget'][0]['#required'] = FALSE;
+    $test = '';
+  }
+}
+
+/**
+ * Implements hook_entity_presave().
+ */
+function players_cfg_entity_presave(Drupal\Core\Entity\EntityInterface $entity) {
+
+  $type = $entity->bundle();
+  switch ($entity->bundle()) {
+    // Here you modify only your day content type
+    case 'day':
+      // Setting the title with the value of field_date.
+      $entity->setTitle($entity->get('field_date')->value);
+      break;
+  }
+}
+
+/**
  * Implements hook_form_FORM_ID_alter().
  */
 function players_cfg_form_user_login_form_alter(&$form, FormStateInterface $form_state, $form_id) {
+  $form['#attributes']['class'][] = 'players-contained-width';
   $form['name']['#title'] = t('Email address');
   $form['name']['#description'] = t('Enter your email address.');
   $form['pass']['#description'] = t('Enter your Player\'s Inc password.');
+  $form['#submit'][] = '_players_cfg_user_login_form_submit';
 }
 
 /**
@@ -58,8 +89,17 @@ function players_cfg_toolbar_alter(&$items) {
       unset($items['administration']);
       unset($items['shortcuts']);
     }
+  }
 }
+
+/**
+ * Custom submit handler for the login form.
+ */
+function _players_cfg_user_login_form_submit($form, FormStateInterface $form_state) {
+  $url = Url::fromUri('internal:/home');
+  $form_state->setRedirectUrl($url);
 }
+
 
 /**
  * Function to get list of colours.
@@ -107,7 +147,7 @@ function _players_cfg_colours(): string {
   $colours .= '#800000,';
 
   // Olive.
-  $colours .= '#808000,';
+  $colours .= '#666A26,';
 
   // Orange.
   $colours .= '#FFA500,';
