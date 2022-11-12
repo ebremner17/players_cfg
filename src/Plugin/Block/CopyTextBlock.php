@@ -69,7 +69,6 @@ class CopyTextBlock extends BlockBase implements ContainerFactoryPluginInterface
     ];
 
     $copy_text['bg_colour'] = $this->configuration['bg_colour'];
-    $copy_text['text_colour'] = $this->configuration['text_colour'];
 
     // Return custom template with variable.
     return [
@@ -107,14 +106,6 @@ class CopyTextBlock extends BlockBase implements ContainerFactoryPluginInterface
       '#title' => $this->t('Background Colour'),
       '#description' => $this->t('Select the background colour.'),
       '#default_value' => $this->configuration['bg_colour'] ?? '#FFFFFF',
-      '#color_values' => _players_cfg_colours(),
-    ];
-
-    $form['colours']['text_colour'] = [
-      '#type' => 'color_picker',
-      '#title' => $this->t('Text Colour'),
-      '#description' => $this->t('Select the text colour.'),
-      '#default_value' => $this->configuration['text_colour'] ?? '#000000',
       '#color_values' => _players_cfg_colours(),
     ];
 
