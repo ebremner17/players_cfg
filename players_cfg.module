@@ -27,10 +27,14 @@ function players_cfg_form_alter(&$form, FormStateInterface $form_state, $form_id
     $form['title']['#required'] = FALSE;
     $form['title']['widget']['#required'] = FALSE;
     $form['title']['widget'][0]['#required'] = FALSE;
-    $test = '';
   }
 
-  if ($form_id == 'user_register_form' || $form_id == 'user_form') {
+  if (
+    $form_id == 'user_register_form' ||
+    $form_id == 'user_form' ||
+    $form_id == 'user_pass'
+  ) {
+
     $form['#attributes']['class'][] = 'players-contained-width';
   }
 }
