@@ -88,6 +88,9 @@ class PlayersHeaderSettingsForm extends ConfigFormBase {
       ->set('bg_color', $values['bg_color'])
       ->save();
 
+    // Clear all caches so the new header shows up.
+    drupal_flush_all_caches();
+
     parent::submitForm($form, $form_state);
   }
 
