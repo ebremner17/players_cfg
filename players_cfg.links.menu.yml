@@ -1,0 +1,5 @@
+players_cfg.create_account:
+  title: 'Create account'
+  menu_name: account
+  url: internal:/user/register
+  weight: 1
