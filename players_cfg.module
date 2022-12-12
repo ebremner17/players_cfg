@@ -121,6 +121,23 @@ function players_cfg_toolbar_alter(&$items) {
 }
 
 /**
+ * Implements hook_preprocess_menu().
+ */
+function players_cfg_preprocess_menu(&$variables) {
+
+  // If the account menu, check if user is logged in,
+  // and if so, remove the create account link.
+  if ($variables['menu_name'] == 'account') {
+
+    // If the user is logged in remove create account link.
+    if (\Drupal::currentUser()->isAuthenticated()) {
+      unset($variables['items']['players_cfg.create_account']);
+    }
+  }
+}
+
+
+/**
  * Custom submit handler for the login form.
  */
 function _players_cfg_user_login_form_submit($form, FormStateInterface $form_state) {
