@@ -42,6 +42,20 @@ function players_cfg_form_alter(&$form, FormStateInterface $form_state, $form_id
 
     $form['#attributes']['class'][] = 'players-contained-width';
   }
+
+  if ($form_id == 'user_register_form') {
+    $form['message_wrapper'] = [
+      '#type' => 'fieldset',
+      '#attributes' => [
+        'class' => ['user-register-message'],
+      ],
+    ];
+
+    $form['message_wrapper']['message'] = [
+      '#type' => 'markup',
+      '#markup' => 'Membership and access to all promotions is contingent on correct full first and last names.  No short forms please.   Information is all encrypted, private and has extremely limited access.',
+    ];
+  }
 }
 
 /**
@@ -67,6 +81,7 @@ function players_cfg_form_user_login_form_alter(&$form, FormStateInterface $form
   $form['name']['#title'] = t('Email address');
   $form['name']['#description'] = t('Enter your email address.');
   $form['pass']['#description'] = t('Enter your Player\'s Inc password.');
+
   $form['#submit'][] = '_players_cfg_user_login_form_submit';
 }
 
