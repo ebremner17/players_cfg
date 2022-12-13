@@ -5,7 +5,7 @@
     {% for future_game in games.future_games %}
      <h3>{{ future_game.display_date }}</h3>
       {% for game in future_game.games %}
-        <h4>{{ game.title }}</h4>
+        <h4>{{ game.title }}: {{ game.start_time }} - {{ game.end_time }}</h4>
       {% endfor %}
     {% endfor %}
     <a href="/reserve">
