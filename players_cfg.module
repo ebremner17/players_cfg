@@ -19,6 +19,11 @@ function players_cfg_theme($existing, $type, $theme, $path) {
         'reserve' => NULL,
       ],
     ],
+    'cbl_upcoming_games' => [
+      'variables' => [
+        'games' => NULL,
+      ],
+    ],
   ];
 }
 

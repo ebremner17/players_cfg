@@ -1,0 +1,28 @@
+<h2 style="text-align: center">Upcoming Games</h2>
+<div class="players-reserve-block">
+  {% if games.future_games | length > 0 %}
+    <h2>Cash Games</h2>
+    {% for future_game in games.future_games %}
+     <h3>{{ future_game.display_date }}</h3>
+      {% for game in future_game.games %}
+        <h4>{{ game.title }}</h4>
+      {% endfor %}
+    {% endfor %}
+    <a href="/reserve">
+      <button class="players-button players-button--blue">Reserve</button>
+    </a>
+  {% endif %}
+  {% if games.tourneys | length > 0 %}
+    <h2>Tournaments</h2>
+    <div class="players-reserve-tourney">
+      {% for tourney in games.tourneys %}
+        <h3>{{ tourney.display_date }}</h3>
+        <h4>{{ tourney.title }}: {{ tourney.start_time }} - {{ tourney.end_time }}</h4>
+      {% endfor %}
+      {{ app.request.baseUrl }}
+      <a href="/reserve/}">
+        <button class="players-button players-button--blue">Reserve</button>
+      </a>
+    </div>
+  {% endif %}
+</div>
