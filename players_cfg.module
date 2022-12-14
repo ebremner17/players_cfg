@@ -141,6 +141,13 @@ function players_cfg_preprocess_menu(&$variables) {
   }
 }
 
+/**
+ * Implements hook_cron().
+ */
+function players_cfg_cron() {
+  // Performs a cache rebuild.
+  drupal_flush_all_caches();
+}
 
 /**
  * Custom submit handler for the login form.
