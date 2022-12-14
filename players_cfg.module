@@ -112,6 +112,7 @@ function players_cfg_toolbar_alter(&$items) {
     if (
       count($roles) > 0 &&
       !in_array('administrator', $roles) &&
+      !in_array('owner', $roles) &&
       (
         $roles[0] == 'authenticated' ||
         in_array('floor', $roles)
