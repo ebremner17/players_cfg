@@ -1,7 +1,7 @@
-players_heading.settings:
-  path: '/admin/config/header/settings'
+players_site.settings:
+  path: '/admin/config/site/settings'
   defaults:
-    _form: '\Drupal\players_cfg\Form\PlayersHeaderSettingsForm'
-    _title: 'Header settings'
+    _form: '\Drupal\players_cfg\Form\PlayersSiteSettingsForm'
+    _title: 'Site settings'
   requirements:
     _permission: 'administer site configuration'
