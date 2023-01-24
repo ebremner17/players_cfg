@@ -7,10 +7,10 @@
       {% for game in future_game.games %}
         <h4>{{ game.title }}: {{ game.start_time }} - {{ game.end_time }}</h4>
       {% endfor %}
+      <a href="/reserve/{{ future_game.date }}">
+        <button class="players-button players-button--blue players-button--small">Reserve</button>
+      </a>
     {% endfor %}
-    <a href="/reserve">
-      <button class="players-button players-button--blue">Reserve</button>
-    </a>
   {% endif %}
   {% if games.tourneys | length > 0 %}
     <h2>Tournaments</h2>
@@ -18,11 +18,11 @@
       {% for tourney in games.tourneys %}
         <h3>{{ tourney.display_date }}</h3>
         <h4>{{ tourney.title }}: {{ tourney.start_time }} - {{ tourney.end_time }}</h4>
+        <a href="/reserve/{{ tourney.date }}">
+          <button class="players-button players-button--blue players-button--small">Reserve</button>
+        </a>
       {% endfor %}
-      {{ app.request.baseUrl }}
-      <a href="/reserve/">
-        <button class="players-button players-button--blue">Reserve</button>
-      </a>
+
     </div>
   {% endif %}
 </div>
