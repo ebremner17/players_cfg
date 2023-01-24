@@ -14,9 +14,9 @@
   {% endif %}
   {% if games.tourneys | length > 0 %}
     <h2>Tournaments</h2>
-    {{ dd(games.tourneys) }}
     <div class="players-reserve-tourney">
       {% for tourney in games.tourneys %}
+        {{ dd(tourney) }}
         <h3>{{ tourney.display_date }}</h3>
         <h4>{{ tourney.title }}: {{ tourney.start_time }} - {{ tourney.end_time }}</h4>
         <a href="/reserve/{{ tourney.date }}">
