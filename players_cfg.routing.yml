@@ -5,3 +5,10 @@ players_site.settings:
     _title: 'Site settings'
   requirements:
     _permission: 'administer site configuration'
+players_site.mailchimp:
+  path: '/admin/config/site/mailchimp'
+  defaults:
+    _form: '\Drupal\players_cfg\Form\PlayersSiteMailchimpForm'
+    _title: 'Mailchimp'
+  requirements:
+    _permission: 'administer site configuration'

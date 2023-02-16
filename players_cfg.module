@@ -2,6 +2,7 @@
 
 use \Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Url;
+use Drupal\Core\Entity\EntityInterface;
 
 /**
  * Implements hook_theme().
@@ -160,6 +161,87 @@ function players_cfg_preprocess_page(&$variables) {
 }
 
 /**
+ * Implements hook_entity_insert().
+ */
+function players_cfg_entity_insert(EntityInterface $entity) {
+
+  // If we are on a user entity, insert/update mailchimp.
+  if ($entity->getEntityTypeId() == 'user') {
+    _players_cfg_mailchimp_subscription($entity, 'insert');
+  }
+}
+
+/**
+ * Implements hook_entity_update().
+ */
+function players_cfg_entity_update(EntityInterface $entity) {
+
+  // If we are on a user entity, insert/update mailchimp.
+  if ($entity->getEntityTypeId() == 'user') {
+    _players_cfg_mailchimp_subscription($entity, 'update');
+  }
+}
+
+/**
+ * Helper function to update or insert into mailchimp.
+ *
+ * @param EntityInterface $entity
+ *   The user entity.
+ */
+function _players_cfg_mailchimp_subscription(EntityInterface $entity, string $type) {
+
+  // API key for mailchimp.
+  $api_key = '14c85d1216de21e4fb4d0ca37b2a15be-us10';
+
+  // Last id for mailchimp.
+  $list_id = '94e982974b';
+
+  // Get the api for mailchimp.
+  $client = new MailchimpMarketing\ApiClient();
+  $client->setConfig([
+    'apiKey' => $api_key,
+    'server' => 'us10',
+  ]);
+
+  // Get first/last names and phone from entity.
+  $first_name = $entity->field_user_first_name->value;
+  $last_name = $entity->field_user_last_name->value;
+  $phone = $entity->field_user_phone->getValue()[0]['phone'];
+
+  // If this is an update, check if the email address
+  // is different, and if it is, archive the old email.
+  if ($type == 'update') {
+
+    // If the old and new emails are not the same,
+    // archive the old email.
+    if ($entity->original->getEmail() !== $entity->getEmail()) {
+
+      // Get the subscriber hash using md5.
+      $subscriber_hash = md5(strtolower($entity->original->getEmail()));
+
+      // Archive the old email address.
+      $client->lists->deleteListMember($list_id, $subscriber_hash);
+    }
+  }
+
+  // Get the email address from the entity.
+  $email = $entity->getEmail();
+
+  // Get the subscriber hash using md5.
+  $subscriber_hash = md5(strtolower($entity->getEmail()));
+
+  $client->lists->setListMember($list_id, $subscriber_hash, [
+    'email_address' => $email,
+    'merge_fields' => [
+      'FNAME' => $first_name,
+      'LNAME' => $last_name,
+      'PHONE' => $phone,
+    ],
+    "status" => "subscribed",
+  ]);
+}
+
+/**
  * Custom submit handler for the login form.
  */
 function _players_cfg_user_login_form_submit($form, FormStateInterface $form_state) {
@@ -250,4 +332,57 @@ function _players_cfg_game_types(): array {
     'Tournament ($1500 Guarantee)' => 'Tournament ($1500 Guarantee)',
     'Tournament - Gold ($7777 Guarantee)' => 'Tournament - Gold ($7777 Guarantee)',
   ];
+}
+
+/**
+ * Helper function to process the batch.
+ *
+ * @param array $users
+ *   The users to process.
+ * @param int $total_count
+ *   The total count of users.
+ * @param $context
+ *   The context of the batch.
+ */
+function _players_cfg_update_mailchimp(array $users, int $total_count, array &$context){
+
+  // The message for the batch process.
+  $message = 'Updating mailchimp list ...';
+
+  // Step through each user and add the id
+  // so that results are displayed.
+  foreach ($users as $user) {
+    $context['results'][] = $user->id();
+    sleep(1);
+  }
+
+  // Update the message.
+  $context['message'] = 'Processed ' . count($context['results']) . ' players out of 419';
+}
+
+/**
+ * Helper function once batch finishes.
+ *
+ * @param bool $success
+ *   If batch was successful.
+ * @param array $results
+ *   The results.
+ * @param array $operations
+ *   The operations.
+ */
+function _players_cfg_update_mailchimp_finished(bool $success, array $results, array $operations) {
+
+  // The 'success' parameter means no fatal PHP errors were detected. All
+  // other error management should be handled using 'results'.
+  if ($success) {
+    $message = \Drupal::translation()->formatPlural(
+      count($results),
+      'One player processed.', '@count players processed.'
+    );
+  }
+  else {
+    $message = t('Finished with an error.');
+  }
+
+  \Drupal::messenger()->addStatus($message);
 }
