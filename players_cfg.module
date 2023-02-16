@@ -190,17 +190,13 @@ function players_cfg_entity_update(EntityInterface $entity) {
  */
 function _players_cfg_mailchimp_subscription(EntityInterface $entity, string $type) {
 
-  // API key for mailchimp.
-  $api_key = '14c85d1216de21e4fb4d0ca37b2a15be-us10';
-
-  // Last id for mailchimp.
-  $list_id = '94e982974b';
+ global $config;
 
   // Get the api for mailchimp.
   $client = new MailchimpMarketing\ApiClient();
   $client->setConfig([
-    'apiKey' => $api_key,
-    'server' => 'us10',
+    'apiKey' => $config['mailchimp_api_key'],
+    'server' => $config['mailchimp_server'],
   ]);
 
   // Get first/last names and phone from entity.
@@ -220,7 +216,7 @@ function _players_cfg_mailchimp_subscription(EntityInterface $entity, string $ty
       $subscriber_hash = md5(strtolower($entity->original->getEmail()));
 
       // Archive the old email address.
-      $client->lists->deleteListMember($list_id, $subscriber_hash);
+      $client->lists->deleteListMember($config['mailchimp_list_id'], $subscriber_hash);
     }
   }
 
@@ -230,7 +226,7 @@ function _players_cfg_mailchimp_subscription(EntityInterface $entity, string $ty
   // Get the subscriber hash using md5.
   $subscriber_hash = md5(strtolower($entity->getEmail()));
 
-  $client->lists->setListMember($list_id, $subscriber_hash, [
+  $client->lists->setListMember($config['mailchimp_list_id'], $subscriber_hash, [
     'email_address' => $email,
     'merge_fields' => [
       'FNAME' => $first_name,
