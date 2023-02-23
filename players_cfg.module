@@ -167,7 +167,7 @@ function players_cfg_entity_insert(EntityInterface $entity) {
 
   // If we are on a user entity, insert/update mailchimp.
   if ($entity->getEntityTypeId() == 'user') {
-    _players_cfg_mailchimp_subscription($entity, 'insert');
+    _players_cfg_mailchimp_subscription($entity);
   }
 }
 
@@ -178,7 +178,7 @@ function players_cfg_entity_update(EntityInterface $entity) {
 
   // If we are on a user entity, insert/update mailchimp.
   if ($entity->getEntityTypeId() == 'user') {
-    _players_cfg_mailchimp_subscription($entity, 'update');
+    _players_cfg_mailchimp_subscription($entity);
   }
 }
 
@@ -188,9 +188,9 @@ function players_cfg_entity_update(EntityInterface $entity) {
  * @param EntityInterface $entity
  *   The user entity.
  */
-function _players_cfg_mailchimp_subscription(EntityInterface $entity, string $type) {
+function _players_cfg_mailchimp_subscription(EntityInterface $entity) {
 
- global $config;
+  global $config;
 
   // Get the api for mailchimp.
   $client = new MailchimpMarketing\ApiClient();
@@ -202,11 +202,19 @@ function _players_cfg_mailchimp_subscription(EntityInterface $entity, string $ty
   // Get first/last names and phone from entity.
   $first_name = $entity->field_user_first_name->value;
   $last_name = $entity->field_user_last_name->value;
-  $phone = $entity->field_user_phone->getValue()[0]['phone'];
+  $phone = $entity->field_user_phone->getValue();
 
-  // If this is an update, check if the email address
+  // Get correct phone number.
+  if (isset($phone[0]['phone'])) {
+    $phone = $phone[0]['phone'];
+  }
+  else {
+    $phone = $phone[0]['local_number'];
+  }
+
+  // Check if this is an update, check if the email address
   // is different, and if it is, archive the old email.
-  if ($type == 'update') {
+  if ($entity->original !== NULL) {
 
     // If the old and new emails are not the same,
     // archive the old email.
@@ -215,8 +223,26 @@ function _players_cfg_mailchimp_subscription(EntityInterface $entity, string $ty
       // Get the subscriber hash using md5.
       $subscriber_hash = md5(strtolower($entity->original->getEmail()));
 
-      // Archive the old email address.
-      $client->lists->deleteListMember($config['mailchimp_list_id'], $subscriber_hash);
+      // The delete flag.
+      $delete_flag = TRUE;
+
+      // Try and see if member exists.
+      // If member does not exist, then
+      // set the flag so that we do no
+      // delete them.
+      try {
+        $response = $client->lists->getListMember($config['mailchimp_list_id'], $subscriber_hash);
+      }
+      catch (Exception $e) {
+        $delete_flag = FALSE;
+      }
+
+      // If the flag is set, delete the member.
+      if ($delete_flag) {
+
+        // Archive the old email address.
+        $client->lists->deleteListMember($config['mailchimp_list_id'], $subscriber_hash);
+      }
     }
   }
 
@@ -226,6 +252,7 @@ function _players_cfg_mailchimp_subscription(EntityInterface $entity, string $ty
   // Get the subscriber hash using md5.
   $subscriber_hash = md5(strtolower($entity->getEmail()));
 
+  // Put the new client in the mailchimp list.
   $client->lists->setListMember($config['mailchimp_list_id'], $subscriber_hash, [
     'email_address' => $email,
     'merge_fields' => [
@@ -348,8 +375,8 @@ function _players_cfg_update_mailchimp(array $users, int $total_count, array &$c
   // Step through each user and add the id
   // so that results are displayed.
   foreach ($users as $user) {
+    _players_cfg_mailchimp_subscription($user);
     $context['results'][] = $user->id();
-    sleep(1);
   }
 
   // Update the message.

@@ -98,6 +98,7 @@ class PlayersSiteMailchimpForm extends FormBase {
     // Rmeove user 0 and user 1.
     unset($users[0]);
     unset($users[1]);
+    unset($users[2]);
 
     // Setup the batch.
     $batch = [
