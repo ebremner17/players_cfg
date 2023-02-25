@@ -350,6 +350,7 @@ function _players_cfg_colours(): string {
 function _players_cfg_game_types(): array {
 
   return [
+    '1/2 ($500 max)' => '1/2 ($500 max)',
     '1/2 ($300 max)' => '1/2 ($300 max)',
     '2/5 ($500 max)' => '2/5 ($500 max)',
     'Tournament ($1500 Guarantee)' => 'Tournament ($1500 Guarantee)',
