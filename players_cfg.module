@@ -183,6 +183,30 @@ function players_cfg_entity_update(EntityInterface $entity) {
 }
 
 /**
+ * Implements hook_preprocess_node().
+ */
+function players_cfg_preprocess_node(&$variables) {
+
+  // Get the header text config.
+  $config = \Drupal::config('players_site.header_text');
+
+  // Get the actual header text.
+  $header_text = $config->get('header_text');
+
+  // If there is header text, add to the variables.
+  if ($header_text) {
+
+    $variables['header_text']['text'] = [
+      '#type' => 'processed_text',
+      '#text' => $header_text['value'],
+      '#format' => $header_text['format'],
+    ];
+
+    $variables['header_text']['bg_color'] = $config->get('bg_color');
+  }
+}
+
+/**
  * Helper function to update or insert into mailchimp.
  *
  * @param EntityInterface $entity
