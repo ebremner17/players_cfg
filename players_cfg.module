@@ -304,63 +304,25 @@ function _players_cfg_user_login_form_submit($form, FormStateInterface $form_sta
  */
 function _players_cfg_colours(): string {
 
-  // Magenta, Pink, Purple, Lime green, White,
-  // Silver, Yellow.
   $colours = '';
 
-  // White.
-  $colours .= '#FFFFFF,';
+  $path = \Drupal::service('extension.list.module')->getPath('players_cfg');
 
-  // Black.
-  $colours .= '#000000,';
+  $row = 0;
+  if (($handle = fopen($path . '/colors.csv', "r")) !== FALSE) {
+    while (($data = fgetcsv($handle, 1000, ",")) !== FALSE) {
 
-  // Aquamarine.
-  $colours .= '#7FFFD4,';
-
-  // Cyan.
-  $colours .= '#00FFFF,';
-
-  // Dark blue.
-  $colours .= '#00008B,';
-
-  // Gray.
-  $colours .= '#808080,';
-
-  // Green.
-  $colours .= '#008000,';
-
-  // Light blue.
-  $colours .= '#ADD8E6,';
-
-  // Lime green.
-  $colours .= '#00ff00,';
-
-  // Magenta.
-  $colours .= '#FF00FF,';
-
-  // Maroon.
-  $colours .= '#800000,';
-
-  // Olive.
-  $colours .= '#666A26,';
-
-  // Orange.
-  $colours .= '#FFA500,';
-
-  // Pink.
-  $colours .= '#FFC0CB,';
-
-  // Purple.
-  $colours .= '#800080,';
-
-  // Red.
-  $colours .= '#ff0000,';
-
-  // Silver.
-  $colours .= '#C0C0C0,';
-
-  // Yellow.
-  $colours .= '#FFFF00';
+      if ($row > 0) {
+        $colours .= ',';
+      }
+      $num = count($data);
+      $row++;
+      for ($c=0; $c < $num; $c++) {
+        $colours .= $data[$c];
+      }
+    }
+    fclose($handle);
+  }
 
   return $colours;
 }
