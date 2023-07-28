@@ -7,6 +7,14 @@
       {% if game.notes %}
         {{ game.notes }}
       {% endif %}
+      {% if game.reserves %}
+        <div class="players-reserves">
+          Players on reserve list: {{ game.reserves.reserved }}<br />
+          {% if game.reserves.seated %}
+            Seated players: {{ game.reserves.seated }}
+          {% endif %}
+        </div>
+      {% endif %}
     {% endfor %}
     <a href="/reserve">
       <button class="players-button players-button--blue">Reserve</button>
