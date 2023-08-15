@@ -346,6 +346,7 @@ function _players_cfg_game_types(): array {
     'Tournament ($1000 Guarantee)' => 'Tournament ($1000 Guarantee)',
     'Tournament ($1500 Guarantee)' => 'Tournament ($1500 Guarantee)',
     'Tournament ($2000 Guarantee)' => 'Tournament ($2000 Guarantee)',
+    'Tournament ($5000 Guarantee)' => 'Tournament ($5000 Guarantee)',
     'Tournament ($1000 Guarantee, Seat to $7777)' => 'Tournament ($1000 Guarantee, Seat to $7777)',
     'Tournament - Gold ($7777 Guarantee)' => 'Tournament - Gold ($7777 Guarantee)',
   ];
