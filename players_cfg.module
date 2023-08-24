@@ -210,13 +210,20 @@ function players_cfg_preprocess_node(&$variables) {
 
     if ($mis) {
       foreach ($mis as $mi) {
-        $media = Media::load($mi['image']);
+
+        if ($mi['image']) {
+          $media = Media::load($mi['image']);
+
+          $media = \Drupal::entityTypeManager()
+            ->getViewBuilder('media')
+            ->view($media, 'default');
+        }
+        else {
+          $media = NULL;
+        }
 
         $marketing_items[] = [
-          'image' => \Drupal::entityTypeManager()
-            ->getViewBuilder('media')
-            ->view($media, 'default'),
-          'heading' => $mi['heading'] ?? NULL,
+          'image' => $media,
           'text' => [
             '#type' => 'processed_text',
             '#text' => $mi['text']['value'],
