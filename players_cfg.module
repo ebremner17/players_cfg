@@ -3,6 +3,7 @@
 use \Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Url;
 use Drupal\Core\Entity\EntityInterface;
+use Drupal\media\Entity\Media;
 
 /**
  * Implements hook_theme().
@@ -202,7 +203,31 @@ function players_cfg_preprocess_node(&$variables) {
       '#format' => $header_text['format'],
     ];
 
-    $variables['header_text']['bg_color'] = $config->get('bg_color');
+    $variables['header_text']['bg_color'] = $config->get('bg_color') ?? NULL;
+
+    $marketing_items = [];
+    $mis = $config->get('marketing_items') ?? NULL;
+
+    if ($mis) {
+      foreach ($mis as $mi) {
+        $media = Media::load($mi['image']);
+
+        $marketing_items[] = [
+          'image' => \Drupal::entityTypeManager()
+            ->getViewBuilder('media')
+            ->view($media, 'default'),
+          'heading' => $mi['heading'] ?? NULL,
+          'text' => [
+            '#type' => 'processed_text',
+            '#text' => $mi['text']['value'],
+            '#format' => $mi['text']['format'],
+          ],
+          'url' => $mi['url'],
+        ];
+      }
+    }
+
+    $variables['marketing_items'] = $marketing_items;
   }
 }
 
