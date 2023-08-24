@@ -223,6 +223,7 @@ function players_cfg_preprocess_node(&$variables) {
             '#format' => $mi['text']['format'],
           ],
           'url' => $mi['url'],
+          'color' => $mi['color'],
         ];
       }
     }
