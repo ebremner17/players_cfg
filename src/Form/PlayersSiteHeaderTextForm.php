@@ -186,6 +186,19 @@ class PlayersSiteHeaderTextForm extends ConfigFormBase {
         '#default_value' => $marketing_items[$i]['url'] ?? '',
       ];
 
+      $settings['item']['color_fieldset'] = [
+        '#type' => 'details',
+        '#title' => $this->t('Marketing item color'),
+        '#open' => FALSE,
+      ];
+
+      $settings['item']['color_fieldset']['color'] = [
+        '#type' => 'color_picker',
+        '#title' => $this->t('Colour'),
+        '#default_value' => $marketing_items[$i]['color'] ?? '#FFFFFF',
+        '#color_values' => _players_cfg_colours(),
+      ];
+
       // The weight element.
       $settings['weight'] = [
         '#type' => 'weight',
@@ -265,6 +278,7 @@ class PlayersSiteHeaderTextForm extends ConfigFormBase {
         'heading' => $item['item']['heading'],
         'text' => $item['item']['text'],
         'url' => $item['item']['url'],
+        'color' => $item['item']['color_fieldset']['color'],
       ];
     }
 
@@ -319,6 +333,7 @@ class PlayersSiteHeaderTextForm extends ConfigFormBase {
         'heading' => $item['item']['heading'],
         'text' => $item['item']['text'],
         'url' => $item['item']['url'],
+        'color' => $item['item']['color_fieldset']['color'],
       ];
     }
 
