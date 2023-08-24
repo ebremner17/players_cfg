@@ -6,3 +6,11 @@
 function players_cfg_update_9101() {
   \Drupal::configFactory()->getEditable('players_site.settings')->delete();
 }
+
+/**
+ * Remove site settings config.
+ */
+function players_cfg_update_9102() {
+  \Drupal::configFactory()->getEditable('players_site.settings')->delete();
+  \Drupal::configFactory()->getEditable('players_site.header_text')->delete();
+}
