@@ -188,7 +188,7 @@ function players_cfg_entity_update(EntityInterface $entity) {
 function players_cfg_preprocess_node(&$variables) {
 
   // Get the header text config.
-  $config = \Drupal::config('players_site.header_text');
+  $config = \Drupal::config('players_cfg.header_text');
 
   // Get the actual header text.
   $header_text = $config->get('header_text');

@@ -15,13 +15,13 @@ class PlayersSiteHeaderTextForm extends ConfigFormBase {
    *
    * @var string
    */
-  const SETTINGS = 'players_site.header_text';
+  const SETTINGS = 'players_cfg.header_text';
 
   /**
    * {@inheritdoc}
    */
   public function getFormId() {
-    return 'players_site_header_text';
+    return 'players_cfg_header_text';
   }
 
   /**

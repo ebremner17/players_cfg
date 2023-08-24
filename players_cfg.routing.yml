@@ -1,25 +1,25 @@
-players_site.settings:
+players_cfg.site_settings:
   path: '/admin/config/site/settings'
   defaults:
     _form: '\Drupal\players_cfg\Form\PlayersSiteSettingsForm'
     _title: 'Site settings'
   requirements:
     _permission: 'administer site configuration'
-players_site.mailchimp:
+players_cfg.mailchimp:
   path: '/admin/config/site/mailchimp'
   defaults:
     _form: '\Drupal\players_cfg\Form\PlayersSiteMailchimpForm'
     _title: 'Mailchimp'
   requirements:
     _permission: 'administer site configuration'
-players_site.mailchimp_send:
+players_cfg.mailchimp_send:
   path: '/admin/config/site/mailchimp-send'
   defaults:
     _form: '\Drupal\players_cfg\Form\PlayersSiteMailchimpSendForm'
     _title: 'Mailchimp Send Email'
   requirements:
     _permission: 'administer site configuration'
-players_site.header_text:
+players_cfg.header_text:
   path: '/admin/config/site/header-text'
   defaults:
     _form: '\Drupal\players_cfg\Form\PlayersSiteHeaderTextForm'

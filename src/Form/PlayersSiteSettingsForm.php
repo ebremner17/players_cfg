@@ -15,13 +15,13 @@ class PlayersSiteSettingsForm extends ConfigFormBase {
    *
    * @var string
    */
-  const SETTINGS = 'players_site.settings';
+  const SETTINGS = 'players_cfg.site_settings';
 
   /**
    * {@inheritdoc}
    */
   public function getFormId() {
-    return 'players_site_settings';
+    return 'players_cfg_site_settings';
   }
 
   /**
