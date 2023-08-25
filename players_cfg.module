@@ -224,6 +224,7 @@ function players_cfg_preprocess_node(&$variables) {
 
         $marketing_items[] = [
           'image' => $media,
+          'heading' => $mi['heading'],
           'text' => [
             '#type' => 'processed_text',
             '#text' => $mi['text']['value'],
