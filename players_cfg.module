@@ -333,17 +333,28 @@ function _players_cfg_user_login_form_submit($form, FormStateInterface $form_sta
 /**
  * Function to get list of colours.
  *
+ * @param string $type
+ *   The type of colours to get.
+ *
  * @return string
  *   String of colours.
  */
-function _players_cfg_colours(): string {
+function _players_cfg_colours(string $type = 'all'): string {
 
   $colours = '';
 
   $path = \Drupal::service('extension.list.module')->getPath('players_cfg');
 
   $row = 0;
-  if (($handle = fopen($path . '/colors.csv', "r")) !== FALSE) {
+
+  if ($type == 'dark') {
+    $color_file_path = '/dark_colors.csv';
+  }
+  else {
+    $color_file_path = '/colors.csv';
+  }
+
+  if (($handle = fopen($path . $color_file_path, "r")) !== FALSE) {
     while (($data = fgetcsv($handle, 1000, ",")) !== FALSE) {
 
       if ($row > 0) {
@@ -437,4 +448,15 @@ function _players_cfg_update_mailchimp_finished(bool $success, array $results, a
   }
 
   \Drupal::messenger()->addStatus($message);
+}
+
+/**
+ * Implements template_preprocess_form_element_label().
+ */
+function players_cfg_preprocess_form_element_label(&$variables) {
+
+  // If this is a marketing item heading, fake the required.
+  if (str_contains($variables['element']['#id'], '-item-heading')) {
+    $variables['attributes']['class'][] = 'form-required';
+  }
 }

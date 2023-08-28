@@ -170,11 +170,17 @@ class PlayersSiteHeaderTextForm extends ConfigFormBase {
         '#type' => 'textfield',
         '#title' => $this->t('Marketing item heading'),
         '#default_value' => $marketing_items[$i]['heading'] ?? '',
+        '#attributes' => [
+          'class' => [
+            'form-required',
+          ],
+        ],
       ];
 
       // The text for the marketing item.
       $settings['item']['text'] = [
         '#type' => 'text_format',
+        '#format' => 'tf_marketing_item',
         '#title' => $this->t('Marketing item text'),
         '#default_value' => $marketing_items[$i]['text']['value'] ?? '',
       ];
@@ -196,7 +202,7 @@ class PlayersSiteHeaderTextForm extends ConfigFormBase {
         '#type' => 'color_picker',
         '#title' => $this->t('Colour'),
         '#default_value' => $marketing_items[$i]['color'] ?? '#FFFFFF',
-        '#color_values' => _players_cfg_colours(),
+        '#color_values' => _players_cfg_colours('dark'),
       ];
 
       // The weight element.
@@ -273,13 +279,19 @@ class PlayersSiteHeaderTextForm extends ConfigFormBase {
     $marketing_items = [];
 
     foreach ($values['items_fieldset']['items'] as $item) {
-      $marketing_items[] = [
-        'image' => $item['item']['image'],
-        'heading' => $item['item']['heading'],
-        'text' => $item['item']['text'],
-        'url' => $item['item']['url'],
-        'color' => $item['item']['color_fieldset']['color'],
-      ];
+      if (
+        $item['item']['heading'] !== '' &&
+        $item['item']['heading'] !== NULL
+      ) {
+
+        $marketing_items[] = [
+          'image' => $item['item']['image'],
+          'heading' => $item['item']['heading'],
+          'text' => $item['item']['text'],
+          'url' => $item['item']['url'],
+          'color' => $item['item']['color_fieldset']['color'],
+        ];
+      }
     }
 
     // Set the config.
@@ -328,13 +340,19 @@ class PlayersSiteHeaderTextForm extends ConfigFormBase {
     // in the events block config.
     foreach ($items as $item) {
 
-      $marketing_items['items'][] = [
-        'image' => $item['item']['image'],
-        'heading' => $item['item']['heading'],
-        'text' => $item['item']['text'],
-        'url' => $item['item']['url'],
-        'color' => $item['item']['color_fieldset']['color'],
-      ];
+      if (
+        $item['item']['heading'] !== '' &&
+        $item['item']['heading'] !== NULL
+      ) {
+
+        $marketing_items['items'][] = [
+          'image' => $item['item']['image'],
+          'heading' => $item['item']['heading'],
+          'text' => $item['item']['text'],
+          'url' => $item['item']['url'],
+          'color' => $item['item']['color_fieldset']['color'],
+        ];
+      }
     }
 
     // Set the events from the items in the form_state, so that we
