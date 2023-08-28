@@ -152,9 +152,23 @@ class PlayersSiteHeaderTextForm extends ConfigFormBase {
         '#title_display' => 'invisible',
       ];
 
+      if (isset($marketing_items[$i]['heading'])) {
+        $title = $marketing_items[$i]['heading'];
+        $open_flag = FALSE;
+      }
+      else if (isset($marketing_items['items'][$i]['heading'])) {
+        $title = $marketing_items['items'][$i]['heading'];
+        $open_flag = FALSE;
+      }
+      else {
+        $title = 'New marketing item';
+        $open_flag = TRUE;
+      }
+
       $settings['item'] = [
-        '#type' => 'fieldset',
-        '#title' => $this->t('Item'),
+        '#type' => 'details',
+        '#title' => $this->t($title),
+        '#open' => $open_flag,
       ];
 
       // The link element.
@@ -195,7 +209,7 @@ class PlayersSiteHeaderTextForm extends ConfigFormBase {
       $settings['item']['color_fieldset'] = [
         '#type' => 'details',
         '#title' => $this->t('Marketing item color'),
-        '#open' => FALSE,
+        '#open' => TRUE,
       ];
 
       $settings['item']['color_fieldset']['color'] = [
@@ -236,7 +250,7 @@ class PlayersSiteHeaderTextForm extends ConfigFormBase {
     $form['heading_fieldset'] = [
       '#type' => 'details',
       '#title' => $this->t('Header text'),
-      '#open' => TRUE,
+      '#open' => FALSE,
     ];
 
     // The text element.
@@ -306,6 +320,38 @@ class PlayersSiteHeaderTextForm extends ConfigFormBase {
 
     parent::submitForm($form, $form_state);
   }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function validateForm(array &$form, FormStateInterface $form_state) {
+
+    // Get the values from the form state.
+    $values = $form_state->getValues();
+
+    // Step through each of the marketing items and validate the
+    // heading text.
+    foreach ($values['items_fieldset']['items'] as $index => $item) {
+
+      // If there is something in the other fields, check that there
+      // is at least something in the heading text.
+      if (
+        $item['item']['heading'] !== '' ||
+        $item['item']['heading'] !== NULL ||
+        $item['item']['color_fieldset']['color'] !== ''
+      ) {
+
+        // If there is nothing in the heading text, set form error.
+        if ($item['item']['heading'] == '') {
+          $form_state->setError(
+            $form['items_fieldset']['items'][$index]['item']['heading'],
+            $this->t('You must enter heading text for the marketing item')
+          );
+        }
+      }
+    }
+  }
+
 
   /**
    * Add one more marketing item to the form.
