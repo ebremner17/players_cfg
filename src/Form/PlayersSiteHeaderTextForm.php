@@ -336,9 +336,8 @@ class PlayersSiteHeaderTextForm extends ConfigFormBase {
       // If there is something in the other fields, check that there
       // is at least something in the heading text.
       if (
-        $item['item']['heading'] !== '' ||
-        $item['item']['heading'] !== NULL ||
-        $item['item']['color_fieldset']['color'] !== ''
+        $item['item']['image'] !== NULL ||
+        $item['item']['text']['value'] !== ''
       ) {
 
         // If there is nothing in the heading text, set form error.
