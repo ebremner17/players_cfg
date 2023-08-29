@@ -171,12 +171,19 @@ class PlayersSiteHeaderTextForm extends ConfigFormBase {
         '#open' => $open_flag,
       ];
 
-      // The link element.
       $settings['item']['image'] = [
+        '#type' => 'media_library',
+        '#allowed_bundles' => ['image'],
+        '#title' => $this->t('Marketing item image'),
+        '#default_value' => $marketing_items[$i]['image'] ?? '',
+      ];
+
+      // The link element.
+      $settings['item']['icon'] = [
         '#type' => 'media_library',
         '#allowed_bundles' => ['icon'],
         '#title' => $this->t('Marketing item icon'),
-        '#default_value' => $marketing_items[$i]['image'] ?? '',
+        '#default_value' => $marketing_items[$i]['icon'] ?? '',
       ];
 
       // The heading for the marketing item.
@@ -300,6 +307,7 @@ class PlayersSiteHeaderTextForm extends ConfigFormBase {
 
         $marketing_items[] = [
           'image' => $item['item']['image'],
+          'icon' => $item['item']['icon'],
           'heading' => $item['item']['heading'],
           'text' => $item['item']['text'],
           'url' => $item['item']['url'],
@@ -392,6 +400,7 @@ class PlayersSiteHeaderTextForm extends ConfigFormBase {
 
         $marketing_items['items'][] = [
           'image' => $item['item']['image'],
+          'icon' => $item['item']['icon'],
           'heading' => $item['item']['heading'],
           'text' => $item['item']['text'],
           'url' => $item['item']['url'],

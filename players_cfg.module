@@ -3,6 +3,7 @@
 use \Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Url;
 use Drupal\Core\Entity\EntityInterface;
+use Drupal\file\Entity\File;
 use Drupal\media\Entity\Media;
 
 /**
@@ -214,16 +215,36 @@ function players_cfg_preprocess_node(&$variables) {
         if ($mi['image']) {
           $media = Media::load($mi['image']);
 
-          $media = \Drupal::entityTypeManager()
-            ->getViewBuilder('media')
-            ->view($media, 'default');
+          $fid = $media->field_media_image[0]->getValue()['target_id'];
+
+          $file = File::load($fid);
+
+          $uri = $file->getFileUri();
+
+          $image = \Drupal::service('file_url_generator')->generateAbsoluteString($uri);
+        }
+        else {
+          $media = NULL;
+        }
+
+        if ($mi['icon']) {
+          $media = Media::load($mi['icon']);
+
+          $fid = $media->field_media_image_1[0]->getValue()['target_id'];
+
+          $file = File::load($fid);
+
+          $uri = $file->getFileUri();
+
+          $icon = \Drupal::service('file_url_generator')->generateAbsoluteString($uri);
         }
         else {
           $media = NULL;
         }
 
         $marketing_items[] = [
-          'image' => $media,
+          'image' => $image,
+          'icon' => $icon,
           'heading' => $mi['heading'],
           'text' => [
             '#type' => 'processed_text',
