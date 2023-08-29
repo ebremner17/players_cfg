@@ -192,22 +192,58 @@ function players_cfg_preprocess_node(&$variables) {
   // Get the header text config.
   $config = \Drupal::config('players_cfg.header_text');
 
-  // Get the actual header text.
-  $header_text = $config->get('header_text');
+  // Get the club info.
+  $club_info = $config->get('club_info');
 
-  // If there is header text, add to the variables.
-  if ($header_text) {
+  // Get the marketing items.
+  $mis = $config->get('marketing_items');
 
-    $variables['header_text']['text'] = [
+  if ($club_info) {
+    $media = Media::load($club_info['image']);
+
+    // Hero media exists, get file entity from media.
+    if ($file = $media->field_media_image_2->entity) {
+
+      // Load the image styles that are needed for the hero.
+      $pi_styles = \Drupal::service('players_reserve.players_service')->getResponsiveImageStyles();
+
+      // Step through each of the image styles and ensure that
+      // the derivative is created.
+      foreach ($pi_styles as $pi_style) {
+
+        // Load the image style.
+        $style = \Drupal::entityTypeManager()
+          ->getStorage('image_style')
+          ->load($pi_style);
+
+        // Get the styled image derivative.
+        $destination = $style->buildUri($file->getFileUri());
+
+        // If the derivative doesn't exist yet (as the image style may
+        // have been added post launch), create it.
+        if (!file_exists($destination)) {
+          $style->createDerivative($file->getFileUri(), $destination);
+        }
+      }
+    }
+
+    $sources = \Drupal::service('players_reserve.players_service')
+      ->prepareResponsiveImage($media, 'ris_players_responsive', 'field_media_image_2', FALSE);
+    $variables['club_info']['image']['sources'] = $sources['responsive_sources'];
+    $variables['club_info']['image']['img_element'] = $sources['img_element']['#uri'];
+    $variables['club_info']['image']['alt'] = $sources['alt'];
+    $variables['club_info']['text'] = [
       '#type' => 'processed_text',
-      '#text' => $header_text['value'],
-      '#format' => $header_text['format'],
+      '#text' => $club_info['text']['value'],
+      '#format' => $club_info['text']['format'],
     ];
+    $variables['club_info']['color'] = $club_info['color'];
+  }
 
-    $variables['header_text']['bg_color'] = $config->get('bg_color') ?? NULL;
+  // If there are marketing items, add to the variables.
+  if ($mis) {
 
     $marketing_items = [];
-    $mis = $config->get('marketing_items') ?? NULL;
 
     if ($mis) {
       foreach ($mis as $mi) {
@@ -215,13 +251,18 @@ function players_cfg_preprocess_node(&$variables) {
         if ($mi['image']) {
           $media = Media::load($mi['image']);
 
-          $fid = $media->field_media_image[0]->getValue()['target_id'];
+          if ($media && $media->hasField('field_media_image_2')) {
+            $fid = $media->field_media_image_2[0]->getValue()['target_id'];
 
-          $file = File::load($fid);
+            $file = File::load($fid);
 
-          $uri = $file->getFileUri();
+            $uri = $file->getFileUri();
 
-          $image = \Drupal::service('file_url_generator')->generateAbsoluteString($uri);
+            $image = \Drupal::service('file_url_generator')->generateAbsoluteString($uri);
+          }
+          else {
+            $image = NULL;
+          }
         }
         else {
           $media = NULL;

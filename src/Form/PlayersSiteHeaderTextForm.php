@@ -93,6 +93,42 @@ class PlayersSiteHeaderTextForm extends ConfigFormBase {
     // can use it in the ajax calls.
     $form_state->set('num_of_rows', $num_of_rows);
 
+    // Get the club info config.
+    $club_info = $config->get('club_info');
+
+    // The details to hold the events items.
+    $form['club_info_fieldset'] = [
+      '#type' => 'details',
+      '#title' => $this->t('Club info'),
+      '#open' => FALSE,
+    ];
+
+    $form['club_info_fieldset']['image'] = [
+      '#type' => 'media_library',
+      '#allowed_bundles' => ['pi_mt_marketing_item'],
+      '#title' => $this->t('Club info image'),
+      '#default_value' => $club_info['image'] ?? '',
+    ];
+
+    // The text element.
+    $form['club_info_fieldset']['text'] = [
+      '#type' => 'text_format',
+      '#title' => $this->t('Club info text'),
+      '#cols' => 60,
+      '#rows' => 5,
+      '#format' => 'tf_marketing_item',
+      '#default_value' => $club_info['text']['value'] ?? NULL,
+    ];
+
+    // The background color.
+    $form['club_info_fieldset']['color'] = [
+      '#type' => 'color_picker',
+      '#title' => $this->t('Club info color'),
+      '#description' => $this->t('Select the colour.'),
+      '#default_value' => $club_info['color'] ?? '#000000',
+      '#color_values' => _players_cfg_colours('dark'),
+    ];
+
     // The details to hold the events items.
     $form['items_fieldset'] = [
       '#type' => 'details',
@@ -100,6 +136,7 @@ class PlayersSiteHeaderTextForm extends ConfigFormBase {
       '#open' => TRUE,
       '#prefix' => '<div id="items-wrapper">',
       '#suffix' => '</div>',
+      '#open' => FALSE,
     ];
 
     // The class to be used for groups.
@@ -173,7 +210,7 @@ class PlayersSiteHeaderTextForm extends ConfigFormBase {
 
       $settings['item']['image'] = [
         '#type' => 'media_library',
-        '#allowed_bundles' => ['image'],
+        '#allowed_bundles' => ['pi_mt_marketing_item'],
         '#title' => $this->t('Marketing item image'),
         '#default_value' => $marketing_items[$i]['image'] ?? '',
       ];
@@ -253,39 +290,6 @@ class PlayersSiteHeaderTextForm extends ConfigFormBase {
       ],
     ];
 
-    // The details to hold the events items.
-    $form['heading_fieldset'] = [
-      '#type' => 'details',
-      '#title' => $this->t('Header text'),
-      '#open' => FALSE,
-    ];
-
-    // The text element.
-    $form['heading_fieldset']['header_text'] = [
-      '#type' => 'text_format',
-      '#title' => $this->t('Header text'),
-      '#cols' => 60,
-      '#rows' => 5,
-      '#format' => $config->get('header_text')['format'] ?? 'full_html',
-      '#default_value' => $config->get('header_text')['value'] ?? NULL,
-    ];
-
-    // Details for the background color.
-    $form['heading_fieldset']['color'] = [
-      '#type' => 'details',
-      '#title' => $this->t('Background Color'),
-      '#open' => TRUE,
-    ];
-
-    // The background color.
-    $form['heading_fieldset']['color']['bg_color'] = [
-      '#type' => 'color_picker',
-      '#title' => $this->t('Background Colour'),
-      '#description' => $this->t('Select the background colour.'),
-      '#default_value' => $config->get('bg_color') ?? '#FFFFFF',
-      '#color_values' => _players_cfg_colours(),
-    ];
-
     return parent::buildForm($form, $form_state);
   }
 
@@ -316,10 +320,23 @@ class PlayersSiteHeaderTextForm extends ConfigFormBase {
       }
     }
 
+    if (
+      isset($values['club_info_fieldset']['text']) &&
+      $values['club_info_fieldset']['text']['value'] !== ''
+    ) {
+      $club_info = [
+        'image' => $values['club_info_fieldset']['image'],
+        'text' => $values['club_info_fieldset']['text'],
+        'color' => $values['club_info_fieldset']['color'],
+      ];
+    }
+    else {
+      $club_info = NULL;
+    }
+
     // Set the config.
     $this->config(static::SETTINGS)
-      ->set('header_text', $values['heading_fieldset']['header_text'] ?? NULL)
-      ->set('bg_color', $values['heading_fieldset']['color']['bg_color'] ?? NULL)
+      ->set('club_info', $club_info)
       ->set('marketing_items', $marketing_items)
       ->save();
 
