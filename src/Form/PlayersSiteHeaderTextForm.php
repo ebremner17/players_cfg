@@ -126,7 +126,7 @@ class PlayersSiteHeaderTextForm extends ConfigFormBase {
       '#title' => $this->t('Club info color'),
       '#description' => $this->t('Select the colour.'),
       '#default_value' => $club_info['color'] ?? '#000000',
-      '#color_values' => _players_cfg_colours('dark'),
+      '#color_values' => _players_cfg_colours(),
     ];
 
     // The details to hold the events items.
