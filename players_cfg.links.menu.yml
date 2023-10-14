@@ -3,3 +3,10 @@ players_cfg.create_account:
   menu_name: account
   url: internal:/user/register
   weight: 1
+direct_clear_cache.admin:
+  title: 'Clear Cache'
+  description: 'A basic module to clear cache'
+  parent: system.admin
+  route_name: players_cfg.clear_cache
+  weight: 100
+

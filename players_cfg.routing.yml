@@ -26,3 +26,10 @@ players_cfg.header_text:
     _title: 'Header Text'
   requirements:
     _permission: 'administer site configuration'
+players_cfg.clear_cache:
+  path: '/direct_clear_cache'
+  defaults:
+    _controller: 'Drupal\players_cfg\Controller\DirectClearCache::content'
+    _title: 'Clear Cache'
+  requirements:
+    _role: 'administrator'
