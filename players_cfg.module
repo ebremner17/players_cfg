@@ -167,10 +167,10 @@ function players_cfg_preprocess_page(&$variables) {
  */
 function players_cfg_entity_insert(EntityInterface $entity) {
 
-  // If we are on a user entity, insert/update mailchimp.
-  if ($entity->getEntityTypeId() == 'user') {
-    _players_cfg_mailchimp_subscription($entity);
-  }
+//  // If we are on a user entity, insert/update mailchimp.
+//  if ($entity->getEntityTypeId() == 'user') {
+//    _players_cfg_mailchimp_subscription($entity);
+//  }
 }
 
 /**
@@ -178,10 +178,10 @@ function players_cfg_entity_insert(EntityInterface $entity) {
  */
 function players_cfg_entity_update(EntityInterface $entity) {
 
-  // If we are on a user entity, insert/update mailchimp.
-  if ($entity->getEntityTypeId() == 'user') {
-    _players_cfg_mailchimp_subscription($entity);
-  }
+//  // If we are on a user entity, insert/update mailchimp.
+//  if ($entity->getEntityTypeId() == 'user') {
+//    _players_cfg_mailchimp_subscription($entity);
+//  }
 }
 
 /**
