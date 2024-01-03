@@ -522,7 +522,11 @@ function _players_cfg_update_mailchimp_finished(bool $success, array $results, a
 function players_cfg_preprocess_form_element_label(&$variables) {
 
   // If this is a marketing item heading, fake the required.
-  if (str_contains($variables['element']['#id'], '-item-heading')) {
+  if (
+    isset($variables['element']['#id']) &&
+    str_contains($variables['element']['#id'], '-item-heading')
+  ) {
+
     $variables['attributes']['class'][] = 'form-required';
   }
 }
