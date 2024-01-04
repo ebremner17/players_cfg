@@ -1,0 +1,22 @@
+{% if marketing_items %}
+  <div class="players-tournaments-block">
+    <div class="owl-carousel owl-theme">
+
+        {% for item in marketing_items %}
+          <div class="players-marketing-item" style="--accent-color: {{item.color}}">
+            <img class="players-marketing-item__image" src="{{ item.image }}" alt="">
+            <div class="players-marketing-item__bk"></div>
+            <div class="players-marketing-item__icon">
+              <img src="{{ item.icon }}" alt="">
+            </div>
+            <div class="players-marketing-item__heading">
+              {{ item.heading }}
+            </div>
+            <div class="players-marketing-item__text">
+              {{ item.text }}
+            </div>
+          </div>
+        {% endfor %}
+      </div>
+  </div>
+{% endif %}

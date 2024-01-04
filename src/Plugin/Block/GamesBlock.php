@@ -10,14 +10,14 @@ use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
- * Copy text block.
+ * Games block.
  *
  * @Block(
- *   id = "cbl_upcoming_games",
- *   admin_label = @Translation("Upcoming Games"),
+ *   id = "cbl_games_block",
+ *   admin_label = @Translation("Games"),
  * )
  */
-class UpcomingGamesBlock extends BlockBase implements ContainerFactoryPluginInterface {
+class GamesBlock extends BlockBase implements ContainerFactoryPluginInterface {
 
   /**
    * The entity type manager.
@@ -47,8 +47,8 @@ class UpcomingGamesBlock extends BlockBase implements ContainerFactoryPluginInte
    */
   public function __construct(
     array $configuration,
-    $plugin_id,
-    $plugin_definition,
+          $plugin_id,
+          $plugin_definition,
     PlayersService $playersService,
     EntityTypeManager $entityTypeManager
   ) {
@@ -85,7 +85,7 @@ class UpcomingGamesBlock extends BlockBase implements ContainerFactoryPluginInte
     // Array of the next six dates.
     $next_six_dates = [];
 
-    for ($i = 1; $i < 7; $i++) {
+    for ($i = 0; $i < 7; $i++) {
       $next_six_dates[] = date('Y-m-d', strtotime('now +' . $i . ' day'));
     }
 
@@ -106,8 +106,13 @@ class UpcomingGamesBlock extends BlockBase implements ContainerFactoryPluginInte
 
     // Return custom template with variable.
     return [
-      '#theme' => 'cbl_upcoming_games',
+      '#theme' => 'cbl_games',
       '#games' => $games,
+      '#attached' => [
+        'library' => [
+          'players_theme/owl',
+        ],
+      ],
     ];
   }
 

@@ -27,6 +27,21 @@ function players_cfg_theme($existing, $type, $theme, $path) {
         'games' => NULL,
       ],
     ],
+    'cbl_games' => [
+      'variables' => [
+        'games' => NULL,
+      ],
+    ],
+    'cbl_tournaments' => [
+      'variables' => [
+        'games' => NULL,
+      ],
+    ],
+    'cbl_promotions' => [
+      'variables' => [
+        'marketing_items' => NULL,
+      ],
+    ],
   ];
 }
 

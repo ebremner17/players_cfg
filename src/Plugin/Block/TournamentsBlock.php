@@ -10,14 +10,14 @@ use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
- * Copy text block.
+ * Games block.
  *
  * @Block(
- *   id = "cbl_upcoming_games",
- *   admin_label = @Translation("Upcoming Games"),
+ *   id = "cbl_tournaments_block",
+ *   admin_label = @Translation("Tournaments"),
  * )
  */
-class UpcomingGamesBlock extends BlockBase implements ContainerFactoryPluginInterface {
+class TournamentsBlock extends BlockBase implements ContainerFactoryPluginInterface {
 
   /**
    * The entity type manager.
@@ -82,32 +82,19 @@ class UpcomingGamesBlock extends BlockBase implements ContainerFactoryPluginInte
    */
   public function build() {
 
-    // Array of the next six dates.
-    $next_six_dates = [];
-
-    for ($i = 1; $i < 7; $i++) {
-      $next_six_dates[] = date('Y-m-d', strtotime('now +' . $i . ' day'));
-    }
-
-    // Get the next week of games.
-    foreach ($next_six_dates as $next_date) {
-
-      // Try and load the game node.
-      $node = current($this->entityTypeManager->getStorage('node')->loadByProperties(['title' => $next_date]));
-
-      // If there is a game node add it to the future games.
-      if ($node) {
-        $games['future_games'][] = $this->playersService->getGameInfo($node);
-      }
-    }
-
     // Get the tournaments.
     $games['tourneys'] = $this->playersService->getTournaments();
+    $games['type'] = 'tournament';
 
     // Return custom template with variable.
     return [
-      '#theme' => 'cbl_upcoming_games',
+      '#theme' => 'cbl_tournaments',
       '#games' => $games,
+      '#attached' => [
+        'library' => [
+          'players_theme/owl',
+        ],
+      ],
     ];
   }
 

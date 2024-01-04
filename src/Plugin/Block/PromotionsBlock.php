@@ -5,19 +5,21 @@ namespace Drupal\players_cfg\Plugin\Block;
 use Drupal\Core\Block\BlockBase;
 use Drupal\Core\Entity\EntityTypeManager;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\file\Entity\File;
+use Drupal\media\Entity\Media;
 use Drupal\players_reserve\Service\PlayersService;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
- * Copy text block.
+ * Promotions block.
  *
  * @Block(
- *   id = "cbl_upcoming_games",
- *   admin_label = @Translation("Upcoming Games"),
+ *   id = "cbl_promotions_block",
+ *   admin_label = @Translation("Promotions"),
  * )
  */
-class UpcomingGamesBlock extends BlockBase implements ContainerFactoryPluginInterface {
+class PromotionsBlock extends BlockBase implements ContainerFactoryPluginInterface {
 
   /**
    * The entity type manager.
@@ -82,32 +84,80 @@ class UpcomingGamesBlock extends BlockBase implements ContainerFactoryPluginInte
    */
   public function build() {
 
-    // Array of the next six dates.
-    $next_six_dates = [];
+    // Get the header text config.
+    $config = \Drupal::config('players_cfg.header_text');
 
-    for ($i = 1; $i < 7; $i++) {
-      $next_six_dates[] = date('Y-m-d', strtotime('now +' . $i . ' day'));
-    }
+    // Get the marketing items.
+    $mis = $config->get('marketing_items');
 
-    // Get the next week of games.
-    foreach ($next_six_dates as $next_date) {
+    // If there are marketing items, add to the variables.
+    if ($mis) {
 
-      // Try and load the game node.
-      $node = current($this->entityTypeManager->getStorage('node')->loadByProperties(['title' => $next_date]));
+      $marketing_items = [];
 
-      // If there is a game node add it to the future games.
-      if ($node) {
-        $games['future_games'][] = $this->playersService->getGameInfo($node);
+      if ($mis) {
+        foreach ($mis as $mi) {
+
+          if ($mi['image']) {
+            $media = Media::load($mi['image']);
+
+            if ($media && $media->hasField('field_media_image_2')) {
+              $fid = $media->field_media_image_2[0]->getValue()['target_id'];
+
+              $file = File::load($fid);
+
+              $uri = $file->getFileUri();
+
+              $image = \Drupal::service('file_url_generator')->generateAbsoluteString($uri);
+            }
+            else {
+              $image = NULL;
+            }
+          }
+          else {
+            $media = NULL;
+          }
+
+          if ($mi['icon']) {
+            $media = Media::load($mi['icon']);
+
+            $fid = $media->field_media_image_1[0]->getValue()['target_id'];
+
+            $file = File::load($fid);
+
+            $uri = $file->getFileUri();
+
+            $icon = \Drupal::service('file_url_generator')->generateAbsoluteString($uri);
+          }
+          else {
+            $media = NULL;
+          }
+
+          $marketing_items[] = [
+            'image' => $image,
+            'icon' => $icon,
+            'heading' => $mi['heading'],
+            'text' => [
+              '#type' => 'processed_text',
+              '#text' => $mi['text']['value'],
+              '#format' => $mi['text']['format'],
+            ],
+            'url' => $mi['url'],
+            'color' => $mi['color'],
+          ];
+        }
       }
     }
 
-    // Get the tournaments.
-    $games['tourneys'] = $this->playersService->getTournaments();
-
     // Return custom template with variable.
     return [
-      '#theme' => 'cbl_upcoming_games',
-      '#games' => $games,
+      '#theme' => 'cbl_promotions',
+      '#marketing_items' => $marketing_items,
+      '#attached' => [
+        'library' => [
+          'players_theme/owl',
+        ],
+      ],
     ];
   }
 
