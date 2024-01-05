@@ -71,31 +71,16 @@ class ReserveBlock extends BlockBase implements ContainerFactoryPluginInterface 
    */
   public function build() {
 
-
     // Get the correct date.
     $date = $this->playersService->getCorrectDate();
 
     // Get the node based on the current date.
     $node = $this->playersService->getGameNodeByDate($date);
 
-    // If there is node, get the info about the games.
-    if ($node) {
-
-      // Get the games.
-      $reserve['games'] = $this->playersService->getGames($node);
-
-      // Set the display date and actual date in the games array.
-      $reserve['display_date'] = date('l F j, Y', strtotime($date));
-      $reserve['date'] = $date;
-    }
-    else {
-      $reserve['display_date'] = date('l F j, Y', strtotime($date));
-    }
-
     // Return custom template with variable.
     return [
       '#theme' => 'cbl_reserve',
-      '#reserve' => $reserve,
+      '#reserve' => $this->playersService->getGameInfo($node),
     ];
   }
 
