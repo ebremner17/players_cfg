@@ -9,4 +9,3 @@ direct_clear_cache.admin:
   parent: system.admin
   route_name: players_cfg.clear_cache
   weight: 100
-
