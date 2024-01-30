@@ -77,10 +77,19 @@ class ReserveBlock extends BlockBase implements ContainerFactoryPluginInterface 
     // Get the node based on the current date.
     $node = $this->playersService->getGameNodeByDate($date);
 
+    // If there is a node, get the reserve info, if not send
+    // null so that template can display no games.
+    if ($node) {
+      $reserve = $this->playersService->getGameInfo($node);
+    }
+    else {
+      $reserve = NULL;
+    }
+
     // Return custom template with variable.
     return [
       '#theme' => 'cbl_reserve',
-      '#reserve' => $this->playersService->getGameInfo($node),
+      '#reserve' => $reserve,
     ];
   }
 

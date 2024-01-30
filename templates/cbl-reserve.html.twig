@@ -1,11 +1,15 @@
 <div class="players-reserve-block">
-  {% include '@players_theme/templates/content/game.html.twig' with {
-    'game_day': reserve.game_day,
-    'open_time': reserve.open_time,
-    'games': reserve.games,
-    'info': reserve.info,
-    'food': reserve.food,
-    'date': reserve.date,
-    'current': reserve.current
-  } %}
+  {% if reserve %}
+    {% include '@players_theme/templates/content/game.html.twig' with {
+      'game_day': reserve.game_day,
+      'open_time': reserve.open_time,
+      'games': reserve.games,
+      'info': reserve.info,
+      'food': reserve.food,
+      'date': reserve.date,
+      'current': reserve.current
+    } %}
+  {% else %}
+    There are no games currently scheduled for today.
+  {% endif %}
 </div>
