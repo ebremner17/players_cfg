@@ -462,6 +462,7 @@ function _players_cfg_game_types(): array {
     '1/2 ($500 max)' => '1/2 ($500 max)',
     '1/2 ($300 max)' => '1/2 ($300 max)',
     '2/5 ($1000 max)' => '2/5 ($1000 max)',
+    '2/5 ($700 max)' => '2/5 ($700 max)',
     '2/5 ($500 max)' => '2/5 ($500 max)',
     'Tournament ($50 buyin/$50 rebuys)' => 'Tournament ($50 buyin/$50 rebuys)',
     'Tournament ($125 buyin/rebuys)' => 'Tournament ($125 buyin/rebuys)',
