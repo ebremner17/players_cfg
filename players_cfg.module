@@ -460,6 +460,7 @@ function _players_cfg_game_types(): array {
     '2/5 ($500 max)' => '2/5 ($500 max)',
     '2/2/5 PLO ($500 max)' => '2/2/5 PLO ($500 max)',
     '2/2 PLO ($500 max)' => '2/2 PLO ($500 max)',
+    'Mixed game ($300 max)' => 'Mixed game ($300 max)',
     'Tournament Deep stack PLO $100 buyin ($80 buyin/$20 bounty)' => 'Tournament Deep stack PLO $100 buyin ($80 buyin/$20 bounty)',
     'Tournament ($50 buyin/$50 rebuys)' => 'Tournament ($50 buyin/$50 rebuys)',
     'Tournament ($125 buyin/rebuys)' => 'Tournament ($125 buyin/rebuys)',
