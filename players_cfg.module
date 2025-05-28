@@ -42,6 +42,11 @@ function players_cfg_theme($existing, $type, $theme, $path) {
         'marketing_items' => NULL,
       ],
     ],
+    'cbl_gallery' => [
+      'variables' => [
+        'media_items' => NULL,
+      ],
+    ],
   ];
 }
 
